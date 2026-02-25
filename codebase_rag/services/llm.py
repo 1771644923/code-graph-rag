@@ -40,9 +40,11 @@ class CypherGenerator:
             config = settings.active_cypher_config
             llm = _create_provider_model(config)
 
+            # Use stricter prompt for local/compatible models that may need more guidance
             system_prompt = (
                 LOCAL_CYPHER_SYSTEM_PROMPT
-                if config.provider == cs.Provider.OLLAMA
+                if config.provider
+                in [cs.Provider.OLLAMA, cs.Provider.OPENAI_COMPATIBLE]
                 else CYPHER_SYSTEM_PROMPT
             )
 
