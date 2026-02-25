@@ -18,6 +18,7 @@ class Provider(StrEnum):
     OLLAMA = "ollama"
     ANTHROPIC = "anthropic"
     OPENAI = "openai"
+    OPENAI_COMPATIBLE = "openai_compatible"
     GOOGLE = "google"
     AZURE = "azure"
     COHERE = "cohere"

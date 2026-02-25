@@ -118,11 +118,47 @@ class OpenAIProvider(ModelProvider):
 
     def create_model(
         self, model_id: str, **kwargs: str | int | None
-    ) -> OpenAIResponsesModel:
+    ) -> OpenAIChatModel:
         self.validate_config()
 
         provider = PydanticOpenAIProvider(api_key=self.api_key, base_url=self.endpoint)
-        return OpenAIResponsesModel(model_id, provider=provider)
+        return OpenAIChatModel(model_id, provider=provider)
+
+
+class OpenAICompatibleProvider(ModelProvider):
+    """OpenAI-Compatible provider for custom endpoints like JD Chatrhino"""
+    def __init__(
+        self,
+        endpoint: str | None = None,
+        api_key: str | None = None,
+        **kwargs: str | int | None,
+    ) -> None:
+        super().__init__(**kwargs)
+        self.endpoint = endpoint or os.environ.get(cs.ENV_OPENAI_API_KEY)
+        self.api_key = api_key or cs.DEFAULT_API_KEY
+
+    @property
+    def provider_name(self) -> cs.Provider:
+        return cs.Provider.OPENAI_COMPATIBLE
+
+    def validate_config(self) -> None:
+        if not self.endpoint:
+            raise ValueError(ex.OPENAI_COMPATIBLE_NO_ENDPOINT)
+        if not self.api_key or self.api_key == cs.DEFAULT_API_KEY:
+            # api_key should be set explicitly, not the default
+            # Check if there's an environment variable for it
+            env_key = os.environ.get("ORCHESTRATOR_API_KEY") or os.environ.get("CYPHER_API_KEY")
+            if not env_key:
+                raise ValueError(ex.OPENAI_COMPATIBLE_NO_API_KEY)
+            self.api_key = env_key
+
+    def create_model(
+        self, model_id: str, **kwargs: str | int | None
+    ) -> OpenAIChatModel:
+        self.validate_config()
+
+        provider = PydanticOpenAIProvider(api_key=self.api_key, base_url=self.endpoint)
+        return OpenAIChatModel(model_id, provider=provider)
 
 
 class OllamaProvider(ModelProvider):
@@ -158,6 +194,7 @@ class OllamaProvider(ModelProvider):
 PROVIDER_REGISTRY: dict[str, type[ModelProvider]] = {
     cs.Provider.GOOGLE: GoogleProvider,
     cs.Provider.OPENAI: OpenAIProvider,
+    cs.Provider.OPENAI_COMPATIBLE: OpenAICompatibleProvider,
     cs.Provider.OLLAMA: OllamaProvider,
 }
 

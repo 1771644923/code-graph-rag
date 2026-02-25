@@ -11,6 +11,14 @@ OPENAI_NO_KEY = (
     "OpenAI provider requires api_key. "
     "Set ORCHESTRATOR_API_KEY or CYPHER_API_KEY in .env file."
 )
+OPENAI_COMPATIBLE_NO_ENDPOINT = (
+    "OpenAI-Compatible provider requires endpoint. "
+    "Set ORCHESTRATOR_ENDPOINT or CYPHER_ENDPOINT in .env file."
+)
+OPENAI_COMPATIBLE_NO_API_KEY = (
+    "OpenAI-Compatible provider requires api_key. "
+    "Set ORCHESTRATOR_API_KEY or CYPHER_API_KEY in .env file."
+)
 OLLAMA_NOT_RUNNING = (
     "Ollama server not responding at {endpoint}. "
     "Make sure Ollama is running: ollama serve"
