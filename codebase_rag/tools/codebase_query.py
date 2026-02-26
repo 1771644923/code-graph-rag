@@ -36,10 +36,14 @@ def create_query_tool(
         cypher_query = QUERY_NOT_AVAILABLE
         try:
             cypher_query = await cypher_gen.generate(natural_language_query)
+            logger.info(ls.MG_CYPHER_QUERY.format(query=cypher_query))
 
             results = ingestor.fetch_all(cypher_query)
 
+            logger.info(ls.TOOL_QUERY_RESULT_COUNT.format(count=len(results)))
+            
             if results:
+                logger.info(ls.TOOL_QUERY_RESULTS.format(results=results[:5]))  # Log first 5 results
                 table = Table(
                     show_header=True,
                     header_style="bold magenta",

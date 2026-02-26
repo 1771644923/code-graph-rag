@@ -215,6 +215,8 @@ TOOL_FILE_EDIT_SURGICAL_SUCCESS = (
     "[FileEditor] Successfully applied surgical block replacement in: {path}"
 )
 TOOL_QUERY_RECEIVED = "[Tool:QueryGraph] Received NL query: '{query}'"
+TOOL_QUERY_RESULT_COUNT = "[Tool:QueryGraph] Query returned {count} results"
+TOOL_QUERY_RESULTS = "[Tool:QueryGraph] Query results: {results}"
 TOOL_QUERY_ERROR = "[Tool:QueryGraph] Error during query execution: {error}"
 TOOL_SHELL_EXEC = "Executing shell command: {cmd}"
 TOOL_SHELL_RETURN = "Return code: {code}"
