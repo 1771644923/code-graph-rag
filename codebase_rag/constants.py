@@ -24,6 +24,7 @@ class Provider(StrEnum):
     COHERE = "cohere"
     LOCAL = "local"
     VLLM = "vllm"
+    KIMI = "kimi"
 
 
 class Color(StrEnum):
@@ -146,6 +147,7 @@ OPENAI_DEFAULT_ENDPOINT = "https://api.openai.com/v1"
 OLLAMA_HEALTH_PATH = "/api/tags"
 GOOGLE_CLOUD_SCOPE = "https://www.googleapis.com/auth/cloud-platform"
 V1_PATH = "/v1"
+KIMI_DEFAULT_ENDPOINT = "https://modelservice.jdcloud.com/v1"
 
 # (H) HTTP status codes
 HTTP_OK = 200

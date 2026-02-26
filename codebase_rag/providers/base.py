@@ -161,6 +161,41 @@ class OpenAICompatibleProvider(ModelProvider):
         return OpenAIChatModel(model_id, provider=provider)
 
 
+class KimiProvider(ModelProvider):
+    """Kimi (Moonshot AI) provider - OpenAI-compatible API
+    
+    Supports both Moonshot AI and JD Cloud endpoints.
+    For JD Cloud, additional configuration may be required.
+    """
+    def __init__(
+        self,
+        api_key: str | None = None,
+        endpoint: str | None = None,
+        app_id: str | None = None,
+        **kwargs: str | int | None,
+    ) -> None:
+        super().__init__(**kwargs)
+        self.api_key = api_key or os.environ.get(cs.ENV_OPENAI_API_KEY) or os.environ.get("ORCHESTRATOR_API_KEY")
+        self.endpoint = endpoint or cs.KIMI_DEFAULT_ENDPOINT
+        self.app_id = app_id or os.environ.get("KIMI_APP_ID")
+
+    @property
+    def provider_name(self) -> cs.Provider:
+        return cs.Provider.KIMI
+
+    def validate_config(self) -> None:
+        if not self.api_key:
+            raise ValueError(ex.KIMI_NO_KEY)
+
+    def create_model(
+        self, model_id: str, **kwargs: str | int | None
+    ) -> OpenAIChatModel:
+        self.validate_config()
+
+        provider = PydanticOpenAIProvider(api_key=self.api_key, base_url=self.endpoint)
+        return OpenAIChatModel(model_id, provider=provider)
+
+
 class OllamaProvider(ModelProvider):
     def __init__(
         self,
@@ -196,6 +231,7 @@ PROVIDER_REGISTRY: dict[str, type[ModelProvider]] = {
     cs.Provider.OPENAI: OpenAIProvider,
     cs.Provider.OPENAI_COMPATIBLE: OpenAICompatibleProvider,
     cs.Provider.OLLAMA: OllamaProvider,
+    cs.Provider.KIMI: KimiProvider,
 }
 
 
